@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,14 +10,14 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import { HomeIcon, MessageCircleIcon, UsersIcon } from "lucide-react";
+import { HomeIcon, MessageCircleIcon, UserIcon } from "lucide-react";
 
 const Navbar = () => {
   return (
     <header className="border-b border-border">
       <div className="container flex items-center justify-between h-16 mx-auto">
         <Link to="/" className="flex items-center">
-          <h1 className="text-2xl font-bold text-primary">РеалиФорум</h1>
+          <h1 className="text-2xl font-bold text-primary">РеалФорум</h1>
         </Link>
 
         <NavigationMenu>
@@ -31,16 +32,16 @@ const Navbar = () => {
             </NavigationMenuItem>
             
             <NavigationMenuItem>
-              <Link to="/categories">
+              <Link to="/articles">
                 <Button variant="ghost" className="flex items-center gap-2">
                   <MessageCircleIcon className="w-4 h-4" />
-                  <span>Категории</span>
+                  <span>Статьи</span>
                 </Button>
               </Link>
             </NavigationMenuItem>
             
             <NavigationMenuItem>
-              <NavigationMenuTrigger>Профиль</NavigationMenuTrigger>
+              <NavigationMenuTrigger>Аккаунт</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[200px] gap-3 p-4">
                   <li>

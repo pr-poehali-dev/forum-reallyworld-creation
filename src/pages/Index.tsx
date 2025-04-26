@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import ArticleCard from "@/components/ArticleCard";
 import TagsList from "@/components/TagsList";
 import { PenIcon } from "lucide-react";
 
-// Моки данных для демонстрации (в реальном приложении данные пришли бы с API)
+// Моки данных для демонстрации
 const mockArticles = [
   {
     id: "1",
@@ -68,9 +69,26 @@ const Index = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
       
+      <div className="hero-gradient py-16 px-4 text-center">
+        <div className="container mx-auto">
+          <h1 className="text-4xl font-bold mb-4">РеалФорум</h1>
+          <p className="text-xl max-w-2xl mx-auto mb-6">
+            Место, где разработчики делятся знаниями, опытом и обсуждают все аспекты программирования
+          </p>
+          <div className="flex gap-4 justify-center">
+            <Link to="/register">
+              <Button size="lg">Присоединиться</Button>
+            </Link>
+            <Link to="/about">
+              <Button variant="outline" size="lg">Узнать больше</Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+      
       <main className="flex-1 container mx-auto py-8 px-4">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">РеалиФорум</h1>
+          <h2 className="text-2xl font-bold">Последние статьи</h2>
           <Link to="/editor">
             <Button className="flex items-center gap-2">
               <PenIcon className="h-4 w-4" />
@@ -133,7 +151,7 @@ const Index = () => {
       
       <footer className="py-6 border-t">
         <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <p>© РеалиФорум 2025. Современная платформа для обмена идеями и знаниями.</p>
+          <p>© РеалФорум 2025. Современная платформа для обмена идеями и знаниями.</p>
         </div>
       </footer>
     </div>
