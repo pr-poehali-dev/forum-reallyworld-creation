@@ -1,86 +1,130 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navbar from "@/components/Navbar";
-import ArticleCard from "@/components/ArticleCard";
-import TagsList from "@/components/TagsList";
-import { PenIcon } from "lucide-react";
+import ForumPostCard from "@/components/ForumPostCard";
+import CategoryList from "@/components/CategoryList";
+import ServerWidget from "@/components/ServerWidget";
+import { PenIcon, DownloadIcon } from "lucide-react";
 
 // Моки данных для демонстрации
-const mockArticles = [
+const mockPosts = [
   {
     id: "1",
-    title: "Как создать современное SPA приложение в 2025 году",
-    description: "Подробное руководство по созданию одностраничных приложений с использованием React, TypeScript и Vite.",
+    title: "Добро пожаловать на сервер CraftLand!",
+    description: "Правила сервера, информация для новичков и другая важная информация, которую нужно знать всем игрокам.",
     body: "Lorem ipsum dolor sit amet...",
-    tags: ["react", "typescript", "vite"],
+    category: "news",
     createdAt: "2025-04-20T12:00:00Z",
-    favoritesCount: 42,
+    likesCount: 142,
     author: {
-      username: "Алексей",
-      image: "https://images.unsplash.com/photo-1599566150163-29194dcaad36",
+      username: "AdminCraft",
+      image: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61",
+      rank: "Администратор"
     },
-    commentsCount: 12,
+    repliesCount: 56,
+    isPinned: true
   },
   {
     id: "2",
-    title: "Оптимизация производительности React приложений",
-    description: "Лучшие практики и советы по улучшению производительности ваших приложений React.",
+    title: "Показываю свою новую постройку: Средневековый замок",
+    description: "Строил две недели, использовал только выживание. Внутри есть система редстоуна и автоматическая ферма.",
     body: "Lorem ipsum dolor sit amet...",
-    tags: ["react", "performance", "optimization"],
-    createdAt: "2025-04-15T10:30:00Z",
-    favoritesCount: 27,
+    category: "builds",
+    createdAt: "2025-04-18T10:30:00Z",
+    likesCount: 87,
     author: {
-      username: "Мария",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+      username: "MasterBuilder",
+      image: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79",
+      rank: "Строитель"
     },
-    commentsCount: 8,
+    repliesCount: 23,
+    isPinned: false
   },
   {
     id: "3",
-    title: "TypeScript 5.5: Новые возможности и улучшения",
-    description: "Обзор новых функций и улучшений в TypeScript 5.5, которые сделают ваш код более надёжным.",
+    title: "Нужна помощь с настройкой плагина Essentials",
+    description: "Не могу правильно настроить права доступа и экономику. Кто может помочь с конфигурацией?",
     body: "Lorem ipsum dolor sit amet...",
-    tags: ["typescript", "javascript", "webdev"],
-    createdAt: "2025-04-10T15:45:00Z",
-    favoritesCount: 35,
+    category: "plugins",
+    createdAt: "2025-04-15T15:45:00Z",
+    likesCount: 12,
     author: {
-      username: "Иван",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d",
+      username: "ServerGuru",
+      image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde",
+      rank: "Игрок"
     },
-    commentsCount: 15,
+    repliesCount: 8,
+    isPinned: false
+  },
+  {
+    id: "4",
+    title: "Ивент на выходных: Охота за сокровищами!",
+    description: "В субботу в 18:00 по МСК приглашаем всех на грандиозную охоту за сокровищами по всей карте!",
+    body: "Lorem ipsum dolor sit amet...",
+    category: "events",
+    createdAt: "2025-04-12T14:20:00Z",
+    likesCount: 56,
+    author: {
+      username: "EventManager",
+      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956",
+      rank: "Модератор"
+    },
+    repliesCount: 19,
+    isPinned: true
+  },
+  {
+    id: "5",
+    title: "Набор в клан 'Лесные Странники'",
+    description: "Ищем активных игроков для совместного строительства и исследования. Требования: опыт от 3 месяцев, возраст 16+.",
+    body: "Lorem ipsum dolor sit amet...",
+    category: "community",
+    createdAt: "2025-04-08T09:15:00Z",
+    likesCount: 34,
+    author: {
+      username: "ForestWalker",
+      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
+      rank: "Лидер клана"
+    },
+    repliesCount: 27,
+    isPinned: false
   },
 ];
 
 const Index = () => {
-  const [selectedTag, setSelectedTag] = useState<string | undefined>(undefined);
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
   
-  const handleSelectTag = (tag: string) => {
-    setSelectedTag(prevTag => prevTag === tag ? undefined : tag);
+  const handleSelectCategory = (category: string) => {
+    setSelectedCategory(prevCategory => prevCategory === category ? undefined : category);
   };
   
-  const filteredArticles = selectedTag 
-    ? mockArticles.filter(article => article.tags.includes(selectedTag))
-    : mockArticles;
+  const filteredPosts = selectedCategory 
+    ? mockPosts.filter(post => post.category === selectedCategory)
+    : mockPosts;
+
+  const pinnedPosts = filteredPosts.filter(post => post.isPinned);
+  const regularPosts = filteredPosts.filter(post => !post.isPinned);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
       
-      <div className="hero-gradient py-16 px-4 text-center">
+      <div className="hero-gradient py-16 px-4 text-center text-white">
         <div className="container mx-auto">
-          <h1 className="text-4xl font-bold mb-4">РеалФорум</h1>
+          <h1 className="text-4xl font-bold mb-4 minecraft-font">CraftLand</h1>
           <p className="text-xl max-w-2xl mx-auto mb-6">
-            Место, где разработчики делятся знаниями, опытом и обсуждают все аспекты программирования
+            Ванильный сервер выживания с дружным комьюнити и интересными мероприятиями
           </p>
           <div className="flex gap-4 justify-center">
-            <Link to="/register">
-              <Button size="lg">Присоединиться</Button>
-            </Link>
-            <Link to="/about">
-              <Button variant="outline" size="lg">Узнать больше</Button>
+            <Button size="lg" className="bg-minecraft-wood hover:bg-minecraft-wood/80 text-white">
+              <DownloadIcon className="mr-2 h-4 w-4" />
+              Начать играть
+            </Button>
+            <Link to="/server-info">
+              <Button variant="outline" size="lg" className="bg-white/10 text-white border-white hover:bg-white/20">
+                Подробнее о сервере
+              </Button>
             </Link>
           </div>
         </div>
@@ -88,41 +132,64 @@ const Index = () => {
       
       <main className="flex-1 container mx-auto py-8 px-4">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Последние статьи</h2>
-          <Link to="/editor">
-            <Button className="flex items-center gap-2">
+          <h2 className="text-2xl font-bold minecraft-font text-minecraft-wood">Форум сервера</h2>
+          <Link to="/create-post">
+            <Button className="flex items-center gap-2 bg-minecraft-grass hover:bg-minecraft-leaf text-white">
               <PenIcon className="h-4 w-4" />
-              Написать статью
+              Создать тему
             </Button>
           </Link>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-3">
-            <Tabs defaultValue="global" className="mb-6">
+            <Tabs defaultValue="all" className="mb-6">
               <TabsList>
-                <TabsTrigger value="global">Глобальная лента</TabsTrigger>
-                <TabsTrigger value="feed">Мои подписки</TabsTrigger>
-                {selectedTag && (
-                  <TabsTrigger value="tag">#{selectedTag}</TabsTrigger>
+                <TabsTrigger value="all">Все темы</TabsTrigger>
+                <TabsTrigger value="hot">Популярные</TabsTrigger>
+                <TabsTrigger value="my">Мои темы</TabsTrigger>
+                {selectedCategory && (
+                  <TabsTrigger value="category">По категории</TabsTrigger>
                 )}
               </TabsList>
               
-              <TabsContent value="global" className="mt-4">
-                <div className="space-y-6">
-                  {filteredArticles.map((article) => (
-                    <ArticleCard key={article.id} {...article} />
+              <TabsContent value="all" className="mt-4">
+                {pinnedPosts.length > 0 && (
+                  <div className="mb-4">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-2">Закрепленные темы</h3>
+                    <div className="space-y-4">
+                      {pinnedPosts.map((post) => (
+                        <ForumPostCard key={post.id} {...post} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                <h3 className="text-sm font-medium text-muted-foreground mb-2">Обсуждения</h3>
+                <div className="space-y-4">
+                  {regularPosts.map((post) => (
+                    <ForumPostCard key={post.id} {...post} />
                   ))}
                 </div>
               </TabsContent>
               
-              <TabsContent value="feed" className="mt-4">
+              <TabsContent value="hot" className="mt-4">
+                <div className="space-y-4">
+                  {filteredPosts
+                    .sort((a, b) => b.likesCount - a.likesCount)
+                    .map((post) => (
+                      <ForumPostCard key={post.id} {...post} />
+                    ))}
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="my" className="mt-4">
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <h3 className="text-lg font-medium mb-2">Войдите, чтобы увидеть статьи от авторов, на которых вы подписаны</h3>
-                  <p className="text-muted-foreground mb-4">Персонализированная лента доступна только для авторизованных пользователей</p>
+                  <h3 className="text-lg font-medium mb-2">Войдите, чтобы увидеть свои темы</h3>
+                  <p className="text-muted-foreground mb-4">Личные темы доступны только для авторизованных пользователей</p>
                   <div className="flex gap-4">
                     <Link to="/login">
-                      <Button>Войти</Button>
+                      <Button className="bg-minecraft-wood hover:bg-minecraft-wood/80 text-white">Войти</Button>
                     </Link>
                     <Link to="/register">
                       <Button variant="outline">Регистрация</Button>
@@ -131,11 +198,11 @@ const Index = () => {
                 </div>
               </TabsContent>
               
-              {selectedTag && (
-                <TabsContent value="tag" className="mt-4">
-                  <div className="space-y-6">
-                    {filteredArticles.map((article) => (
-                      <ArticleCard key={article.id} {...article} />
+              {selectedCategory && (
+                <TabsContent value="category" className="mt-4">
+                  <div className="space-y-4">
+                    {filteredPosts.map((post) => (
+                      <ForumPostCard key={post.id} {...post} />
                     ))}
                   </div>
                 </TabsContent>
@@ -143,15 +210,29 @@ const Index = () => {
             </Tabs>
           </div>
           
-          <div>
-            <TagsList onSelectTag={handleSelectTag} selectedTag={selectedTag} />
+          <div className="space-y-6">
+            <ServerWidget 
+              serverName="CraftLand Survival"
+              onlinePlayers={87}
+              maxPlayers={150}
+              serverVersion="1.20.4"
+              serverIp="play.craftland.ru"
+            />
+            
+            <CategoryList onSelectCategory={handleSelectCategory} selectedCategory={selectedCategory} />
           </div>
         </div>
       </main>
       
-      <footer className="py-6 border-t">
+      <footer className="py-6 border-t border-minecraft-wood/20 bg-minecraft-dirt/5">
         <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <p>© РеалФорум 2025. Современная платформа для обмена идеями и знаниями.</p>
+          <p>© CraftLand 2025. Майнкрафт-сервер и сообщество игроков.</p>
+          <div className="flex justify-center gap-4 mt-2 text-sm">
+            <Link to="/rules" className="hover:text-minecraft-grass">Правила</Link>
+            <Link to="/team" className="hover:text-minecraft-grass">Команда</Link>
+            <Link to="/donate" className="hover:text-minecraft-grass">Поддержать</Link>
+            <Link to="/contact" className="hover:text-minecraft-grass">Контакты</Link>
+          </div>
         </div>
       </footer>
     </div>
